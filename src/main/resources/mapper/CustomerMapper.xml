@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.score.api.mapper.CustomerMapper" >
+    <resultMap id="BaseResultMap" type="com.score.api.dto.CustomerDto" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="age" property="age" jdbcType="INTEGER" />
+        <result column="gender" property="gender" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="area" property="area" jdbcType="VARCHAR" />
+
+        <result column="degree" property="degree" jdbcType="VARCHAR" />
+        <result column="year_income" property="year_income" jdbcType="VARCHAR" />
+        <result column="fund_open_date" property="fund_open_date" jdbcType="VARCHAR" />
+        <result column="trade_account" property="trade_account" jdbcType="VARCHAR" />
+
+        <result column="activate_score" property="activate_score" jdbcType="DOUBLE" />
+        <result column="product1_score" property="product1_score" jdbcType="DOUBLE" />
+        <result column="product2_score" property="product2_score" jdbcType="DOUBLE" />
+        <result column="product3_score" property="product3_score" jdbcType="DOUBLE" />
+        <result column="churn_score" property="churn_score" jdbcType="DOUBLE" />
+
+    </resultMap>
+    <sql id="Base_Column_List" >
+        c.id, age, name,area,gender, degree, year_income, fund_open_date,trade_account,
+        activate_score,product1_score,product2_score,product3_score,churn_score
+    </sql>
+
+    <select id="getCustomerList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+              <include refid="Base_Column_List" />
+        from customer c INNER join customer_score s on c.id = s.customer_id
+        <where>
+                1=1
+              <if test="gender != null and gender != 2 ">
+                and gender = #{gender,jdbcType=VARCHAR}
+              </if>
+              <if test="degree != null and degree != 6">
+                and degree = #{degree,jdbcType=VARCHAR}
+              </if>
+              <if test="areas != null ">
+                    and area in
+                  <foreach item="item" index="areas" collection="areas" open="(" separator="," close=")">
+                      #{item}
+                  </foreach>
+              </if>
+              <if test="year_income_from != null and year_income_to != null">
+                and year_income BETWEEN  #{year_income_from,jdbcType=DOUBLE} and #{year_income_to,jdbcType=DOUBLE}
+              </if>
+              <if test="score_field != null">
+                  and ${score_field} BETWEEN #{score_from,jdbcType=DOUBLE} and #{score_to,jdbcType=DOUBLE}
+              </if>
+        </where>
+        limit 0,500
+    </select>
+</mapper>

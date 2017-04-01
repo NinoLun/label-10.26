@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.score.api.mapper.SearchMapper" >
+
+    <resultMap id="BaseResultMap" type="com.score.api.model.Search" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="val" property="val" jdbcType="VARCHAR" />
+        <result column="is_view" property="is_view" jdbcType="VARCHAR" />
+    </resultMap>
+    <update id="updateById"  parameterType="java.lang.String" >
+        update
+          search set is_view = #{is_view,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>
